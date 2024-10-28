@@ -1,0 +1,164 @@
+[tool.poetry]
+name = "confeasy.azure_appc"
+version = "0.0.1"
+description = "Lorem ipsum dolor sit."
+authors = ["jan Dvorak <jandvorak.public@gmail.com>"]
+readme = "README.md"
+packages = [
+  { include = "confeasy.azure_appc" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.13"
+azure-identity = "^1.19.0"
+azure-appconfiguration = "^1.7.1"
+
+[tool.poetry.group.dev.dependencies]
+bandit = { version = "^1.7.10", extras = ["toml"] }
+bumpver = "^2023.1129"
+mypy = "^1.13.0"
+pip-audit = "^2.7.3"
+poethepoet = "^0.26.1"
+pydocstyle = { version = "^6.3.0", extras = ["toml"] }
+pytest = "^8.3.3"
+python-dotenv = "^1.0.1"
+ruff = "^0.4.4"
+types-requests = "^2.32.0.20241016"
+
+[tool.mypy]
+exclude = '^tests/'
+python_version = "3.13"
+cache_dir = ".cache/mypy/"
+check_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+follow_imports = "silent"
+ignore_missing_imports = true
+no_implicit_reexport = true
+show_error_codes = true
+warn_redundant_casts = true
+warn_return_any = false
+warn_unused_ignores = true
+
+[tool.pytest.ini_options]
+cache_dir = ".cache/pytest/"
+testpaths = [
+  "tests/",
+]
+addopts = [
+  "-ra",
+  "--capture=no",
+]
+markers = [
+  "slow: Slow tests",
+  "sideeffect: Side effects may occur by running the tests",
+]
+
+[tool.ruff]
+cache-dir = ".cache/ruff"
+line-length = 120
+output-format = "grouped"
+target-version = "py313"
+
+[tool.ruff.lint]
+ignore = ["E501"]
+select = [
+  "A",    # flake8-builtins
+  "ARG",  # flake8-unused-arguments
+  "B",    # flake8-bugbear
+  "C4",   # flake8-comprehensions
+  "C90",  # mccabe
+  "E",    # pycodestyle
+  "F",    # Pyflakes
+  "I001", # isort
+  "N",    # pep8-naming
+  "NPY",  # NumPy
+  "PD",   # pandas-vet
+  "PIE",  # flake8-pie
+  "PLE",  # Pylint Error
+  "PTH",  # flake8-use-pathlib
+  "RUF",  # Ruff
+  "S",    # flake8-bandit
+  "SIM",  # flakes8-simplify
+  "T20",  # flake8-print
+  "UP",   # pyupgrade
+]
+
+[tool.ruff.lint.isort]
+force-sort-within-sections = true
+lines-after-imports = 2
+
+[tool.ruff.lint.pyupgrade]
+keep-runtime-typing = true
+
+[tool.pydocstyle]
+match_dir = "confeasy"
+ignore = [  # https://www.pydocstyle.org/en/stable/error_codes.html
+  "D105", # magic methods
+  "D107", # __init__
+  "D203", # 1 blank line required before class docstring
+  "D205", # 1 blank line required between summary line and description
+  "D212", # multiline docstring should start at the first line (mutualy exclusive with D213)
+  "D400", # First line should end with a period
+  "D415", # First line should end with a period, question mark, or exclamation point
+]
+
+[tool.poe.tasks]
+
+[tool.poe.tasks.clean]
+help = "Remove generated files (cache, test reports, etc.) to clean up the solution directory"
+cmd  = """
+  rm -rf .cache
+         .coverage
+         .mypy_cache
+         .pytest_cache
+         ./**/__pycache__
+         dist
+         htmlcov
+         test-report-junit.xml
+"""
+
+[tool.poe.tasks.code]
+help = "Run formating, linting and various code quality checks in a sequence"
+sequence = ["format", "lintfix", "codestyle", "docstyle", "type"]
+
+[tool.poe.tasks.format]
+help = "Format the code"
+cmd = "ruff format ."
+
+[tool.poe.tasks.test]
+help = "Run unit tests skipping slow tests or tests with side effects."
+cmd  = "pytest --no-header -m 'not slow and not sideeffect'"
+
+[tool.poe.tasks.citest]
+help = "Run unit tests in CI pipeline (creates file test-report-junit.xml)"
+cmd  = "pytest --no-header --junit-xml=test-report-junit.xml"
+
+[tool.poe.tasks.type]
+help = "Check typing hints"
+cmd  = "mypy ."
+
+[tool.poe.tasks.lint]
+help = "Run code linter"
+cmd  = "ruff check confeasy.azure_appc"
+
+[tool.poe.tasks.lintfix]
+help = "Run linter and fix issues"
+cmd  = "ruff check confeasy.azure_appc --fix"
+
+[tool.poe.tasks.codestyle]
+help = "Check code style"
+cmd = "ruff format --check --quiet ."
+
+[tool.poe.tasks.docstyle]
+help = "Check docstring conventions"
+cmd  = "pydocstyle --config=pyproject.toml confeasy.azure_appc"
+
+[tool.poe.tasks.security]
+help = "Check code security"
+sequence = ["bandit -r confeasy.azure_appc", "pip-audit --progress-spinner off"]
+default_item_type = "cmd"
+
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]
