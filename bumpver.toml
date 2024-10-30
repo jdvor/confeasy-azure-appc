@@ -1,9 +1,10 @@
 [bumpver]
 current_version = "0.0.1"
 version_pattern = "MAJOR.MINOR.PATCH[PYTAGNUM]"
-commit_message = "Bump version {old_version} -> {new_version}"
+commit_message = "version {old_version} -> {new_version}"
 commit = true
 tag = true
+tag_name = "v{new_version}"
 push = true
 
 [bumpver.file_patterns]
@@ -13,6 +14,6 @@ push = true
 "pyproject.toml" = [
   '^version = "{pep440_version}"$',
 ]
-"dtvr/__init__.py" = [
+"confeasy.azure_appc/__init__.py" = [
   '^__version__ = "{pep440_version}"$',
 ]

@@ -9,10 +9,10 @@ changelog:
         - "breaking change"
     - title: New Features
       labels:
-        - "new feature"
-    - title: Bug fixes
+        - "feature"
+    - title: Bug Fixes
       labels:
-        - "bug fix"
+        - "bug"
     - title: Other Changes
       labels:
         - "*"

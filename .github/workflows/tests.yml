@@ -1,61 +1,43 @@
 name: 'Tests'
 
 on:
-#  push:
-#    branches: ['master']
-#    paths-ignore: ['**.md', '**.sh', '.editorconfig', '.gitignore', '.gitattributes', '.pre-commit-config.yaml']
-#  pull_request:
-#    branches: ['master']
-#    paths-ignore: ['**.md', '**.sh', '.editorconfig', '.gitignore', '.gitattributes', '.pre-commit-config.yaml']
-  workflow_dispatch:
-    inputs:
-      environment:
-        type: choice
-        description: 'Select the environment to run integration tests'
-        options:
-          - 'dev'
-          - 'stage'
-          - 'prod'
-        default: 'dev'
-        required: true
+  push:
+    branches: ['master']
+    paths-ignore: ['**.md', '.editorconfig', '.gitignore', '.gitattributes', '.pre-commit-config.yaml']
 
-    secrets:
-      DATAVERSE_CLIENT_CONFIG:
-        required: true
+  pull_request:
+    branches: ['master']
+    paths-ignore: ['**.md', '.editorconfig', '.gitignore', '.gitattributes', '.pre-commit-config.yaml']
+
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: '3.13'
+  POETRY_VERSION: '1.8.4'
 
 jobs:
   tests:
     name: 'Run Tests'
 
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: [ "3.12" ]  # [ "3.10", "3.11", "3.12" ]
-        poetry-version: [ "1.8.4" ]
-        os: [ ubuntu-22.04 ]  # [ ubuntu-22.04, macos-latest, windows-latest ]
-
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     steps:
 
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # 0 => all history for all branches and tags
+          fetch-depth: 0  # all history for all branches and tags
           submodules: true
-
-      - name: Install jq
-        run: sudo apt install jq -y
 
       - name: Install python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install and configure Poetry
         uses: snok/install-poetry@v1
         with:
-          version: ${{ matrix.poetry-version }}
+          version: ${{ env.POETRY_VERSION }}
           virtualenvs-create: true
           virtualenvs-in-project: true
           installer-parallel: true
@@ -74,8 +56,8 @@ jobs:
       - name: Install the project
         run: poetry install --no-interaction
 
-      - name: Check code codestyle
-        run: poetry run poe style
+      - name: Check code style
+        run: poetry run poe codestyle
 
       - name: Check type hints
         run: poetry run poe type
@@ -83,10 +65,7 @@ jobs:
       - name: Check docstring conventions
         run: poetry run poe docstyle
 
-      - name: Create .env file for integration tests
-        run: ./ci_prepare_env_for_tests.sh -e "${{ inputs.environment }}" -s "${{ secrets.DATAVERSE_CLIENT_CONFIG }}"
-
-      - name: Run tests
+      - name: Run all tests
         run: poetry run poe citest
 
       - name: Show test report
@@ -98,4 +77,3 @@ jobs:
           display-options: fEX  # results included in the report; follows the same syntax as `pytest -r`
           fail-on-empty: true
           title: Test results
-

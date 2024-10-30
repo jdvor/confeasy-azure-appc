@@ -29,10 +29,10 @@ repos:
         types_or: [python]
         require_serial: true
         pass_filenames: false
-      - id: poe-style
+      - id: poe-code-style
         name: poe style
         description: Check code style
-        entry: poe style
+        entry: poe codestyle
         language: python
         types_or: [python]
         pass_filenames: false
