@@ -53,6 +53,22 @@ msal-extensions = ">=1.2.0"
 typing-extensions = ">=4.0.0"
 
 [[package]]
+name = "azure-keyvault-secrets"
+version = "4.9.0"
+description = "Microsoft Azure Key Vault Secrets Client Library for Python"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "azure_keyvault_secrets-4.9.0-py3-none-any.whl", hash = "sha256:33c7e2aca2cc2092cebc8c6e96eca36a5cc30c767e16ea429c5fa21270e9fba6"},
+    {file = "azure_keyvault_secrets-4.9.0.tar.gz", hash = "sha256:2a03bb2ffd9a0d6c8ad1c330d9d0310113985a9de06607ece378fd72a5889fe1"},
+]
+
+[package.dependencies]
+azure-core = ">=1.31.0"
+isodate = ">=0.6.1"
+typing-extensions = ">=4.0.1"
+
+[[package]]
 name = "bandit"
 version = "1.7.10"
 description = "Security oriented static analyser for python code."
@@ -1424,4 +1440,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.13"
-content-hash = "8c2b8a85b9038e939ea7fc6536a01870a2634b5640b14cb0b34f1724a7c23d5c"
+content-hash = "23ae3967b274cc418e724522b5a27875ec1ec3fcf92a41d28b37e9aa3c250add"

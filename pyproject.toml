@@ -7,13 +7,14 @@ readme = "README.md"
 keywords = ["configuration", "azure", "AppConfiguration"]
 license = "MIT"
 packages = [
-  { include = "confeasy.azure_appc" },
+  { include = "confeasy" },
 ]
 
 [tool.poetry.dependencies]
 python = "^3.13"
-azure-identity = "^1.19.0"
 azure-appconfiguration = "^1.7.1"
+azure-identity = "^1.19.0"
+azure-keyvault-secrets = "^4.9.0"
 
 [tool.poetry.group.dev.dependencies]
 bandit = { version = "^1.7.10", extras = ["toml"] }
@@ -47,13 +48,13 @@ warn_unused_ignores = true
 [tool.pytest.ini_options]
 cache_dir = ".cache/pytest/"
 pythonpath = [
-  "confeasy.azure_appc/",
+  "confeasy/",
 ]
 testpaths = [
   "tests/",
 ]
 addopts = [
-  "--cov=confeasy.azure_appc",
+  "--cov=confeasy",
   "--cov-fail-under=70",
   "--cov-report=term-missing:skip-covered",
   "-ra",
@@ -123,7 +124,7 @@ lines-after-imports = 2
 keep-runtime-typing = true
 
 [tool.pydocstyle]
-match_dir = "confeasy.azure_appc"
+match_dir = "confeasy"
 ignore = [  # https://www.pydocstyle.org/en/stable/error_codes.html
   "D105", # magic methods
   "D107", # __init__
@@ -171,11 +172,11 @@ cmd  = "mypy ."
 
 [tool.poe.tasks.lint]
 help = "Run code linter"
-cmd  = "ruff check confeasy.azure_appc"
+cmd  = "ruff check confeasy"
 
 [tool.poe.tasks.lintfix]
 help = "Run linter and fix issues"
-cmd  = "ruff check confeasy.azure_appc --fix"
+cmd  = "ruff check confeasy --fix"
 
 [tool.poe.tasks.codestyle]
 help = "Check code style"
@@ -183,11 +184,11 @@ cmd = "ruff format --check --quiet ."
 
 [tool.poe.tasks.docstyle]
 help = "Check docstring conventions"
-cmd  = "pydocstyle --config=pyproject.toml confeasy.azure_appc"
+cmd  = "pydocstyle --config=pyproject.toml confeasy"
 
 [tool.poe.tasks.security]
 help = "Check code security"
-sequence = ["bandit -r confeasy.azure_appc", "pip-audit --progress-spinner off"]
+sequence = ["bandit -r confeasy", "pip-audit --progress-spinner off"]
 default_item_type = "cmd"
 
 [tool.poe.tasks.version_and_push]

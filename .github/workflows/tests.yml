@@ -66,6 +66,8 @@ jobs:
         run: poetry run poe docstyle
 
       - name: Run all tests
+        env:
+          APPC_CONNECTION_STRING: ${{ secrets.APPC_CONNECTION_STRING }}
         run: poetry run poe citest
 
       - name: Show test report

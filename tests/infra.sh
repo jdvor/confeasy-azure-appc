@@ -29,4 +29,5 @@ fi
 az config set extension.use_dynamic_install=yes_without_prompt --only-show-errors
 az group create --subscription "$subscription_id" -n "$rg" --location "$location" --only-show-errors
 
-az deployment group create --subscription "$subscription_id" -g "$rg" -f test_azure_appc.bicep -n "deploy-confeasy-$deployment_suffix"
+az deployment group create --subscription "$subscription_id" -g "$rg" -f test_azure_appc.bicep \
+  -n "deploy-confeasy-$deployment_suffix" --query "properties.outputs.appcConnStr.value" -o tsv

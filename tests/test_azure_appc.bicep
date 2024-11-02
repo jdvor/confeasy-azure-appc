@@ -14,7 +14,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' = {
       family: 'A'
       name: 'standard'
     }
-    enableRbacAuthorization: false
+    enableRbacAuthorization: true
     networkAcls: {
       defaultAction: 'Allow'
     }
@@ -31,7 +31,7 @@ resource kv1 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   }
 }
 
-resource appConfig 'Microsoft.AppConfiguration/configurationStores@2023-03-01' = {
+resource appc 'Microsoft.AppConfiguration/configurationStores@2023-03-01' = {
   name: appConfigName
   location: location
   sku: {
@@ -40,10 +40,11 @@ resource appConfig 'Microsoft.AppConfiguration/configurationStores@2023-03-01' =
   properties: {
     publicNetworkAccess: 'Enabled'
   }
+  dependsOn: [keyVault]
 }
 
 resource cfg1 'Microsoft.AppConfiguration/configurationStores/keyValues@2023-03-01' = {
-  parent: appConfig
+  parent: appc
   name: 'AlphaHorse'
   properties: {
     value: '1'
@@ -52,7 +53,7 @@ resource cfg1 'Microsoft.AppConfiguration/configurationStores/keyValues@2023-03-
 }
 
 resource cfg2 'Microsoft.AppConfiguration/configurationStores/keyValues@2023-03-01' = {
-  parent: appConfig
+  parent: appc
   name: 'beta.gammaGoat'
   properties: {
     value: '2'
@@ -61,7 +62,7 @@ resource cfg2 'Microsoft.AppConfiguration/configurationStores/keyValues@2023-03-
 }
 
 resource cfg3 'Microsoft.AppConfiguration/configurationStores/keyValues@2023-03-01' = {
-  parent: appConfig
+  parent: appc
   name: 'beta.deltaRabbit'
   properties: {
     value: '3'
@@ -70,8 +71,8 @@ resource cfg3 'Microsoft.AppConfiguration/configurationStores/keyValues@2023-03-
 }
 
 resource cfg4 'Microsoft.AppConfiguration/configurationStores/keyValues@2023-03-01' = {
-  parent: appConfig
-  name: 'db.connection_string\n${label}' // this is atrocity, but it sets label = dev
+  parent: appc
+  name: 'db.connection_string$${label}'
   properties: {
     value: 'lorem ipsum dolor sit'
     contentType: 'text/plain'
@@ -79,8 +80,8 @@ resource cfg4 'Microsoft.AppConfiguration/configurationStores/keyValues@2023-03-
 }
 
 resource cfg5 'Microsoft.AppConfiguration/configurationStores/keyValues@2023-03-01' = {
-  parent: appConfig
-  name: 'db.max_connections\n${label}' // this is atrocity, but it sets label = dev
+  parent: appc
+  name: 'db.max_connections$${label}'
   properties: {
     value: '200'
     contentType: 'text/plain'
@@ -88,10 +89,12 @@ resource cfg5 'Microsoft.AppConfiguration/configurationStores/keyValues@2023-03-
 }
 
 resource cfg6 'Microsoft.AppConfiguration/configurationStores/keyValues@2023-03-01' = {
-  parent: appConfig
+  parent: appc
   name: 'kv.admin_pswd'
   properties: {
-    value: '${keyVault.id}/secrets/${kv1.name}'
+    value: '{"uri":"${keyVault.properties.vaultUri}secrets/${kv1.name}"}'
     contentType: 'application/vnd.microsoft.appconfig.keyvaultref+json;charset=utf-8'
   }
 }
+
+output appcConnStr string = listKeys(appc.id, '2023-03-01').value[0].connectionString
