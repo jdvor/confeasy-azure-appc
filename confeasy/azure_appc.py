@@ -13,7 +13,7 @@ from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import KeyVaultSecret, SecretClient
 
 
-__version__ = "0.0.1"
+__version__ = "1.0.0"
 
 SNAKE_CASE_REPLACE_PATTERN = re.compile(r"(?<!^)(?=[A-Z][a-z]|[A-Z](?=[A-Z][a-z]|$))")
 KEYVAULT_REF_TYPE = "application/vnd.microsoft.appconfig.keyvaultref+json"
