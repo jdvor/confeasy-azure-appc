@@ -15,10 +15,12 @@ load_dotenv(dotenv_path=envfile)
 
 
 def test_keys_are_normalized():
-    mock = AzureAppConfigurationClientMock({
-        "YellowHorse": "1",
-        "beta.loremIpsum": "yes",
-    })
+    mock = AzureAppConfigurationClientMock(
+        {
+            "YellowHorse": "1",
+            "beta.loremIpsum": "yes",
+        }
+    )
     # noinspection PyTypeChecker
     sut = AzureAppConfig(mock)
     actual = sut.get_configuration_data()
@@ -29,10 +31,7 @@ def test_keys_are_normalized():
 
 # noinspection PyTypeChecker
 def test_keyvault_ref_is_replaced_by_real_value():
-    appc_mock = AzureAppConfigurationClientMock({
-        "admin_pswd": kvref("admin_pswd"),
-        "alpha": "1"
-    })
+    appc_mock = AzureAppConfigurationClientMock({"admin_pswd": kvref("admin_pswd"), "alpha": "1"})
     kv_mock = SecretClientMock.with_data({"admin_pswd": "pass123"})
 
     def cf(_: str):
@@ -63,10 +62,12 @@ def test_errors_are_visible_if_requested():
 # noinspection PyTypeChecker
 def test_errors_are_swallowed_by_default():
     ref = kvref("admin_pswd")
-    appc_mock = AzureAppConfigurationClientMock({
-        "admin_pswd": ref,
-        "alpha": "1",
-    })
+    appc_mock = AzureAppConfigurationClientMock(
+        {
+            "admin_pswd": ref,
+            "alpha": "1",
+        }
+    )
     kv_mock = SecretClientMock.raising_error("I don't like you")
 
     def cf(_: str):
@@ -93,12 +94,10 @@ def test_appc_real():
 
 
 class AzureAppConfigurationClientMock:
-
     def __init__(self, data: dict[str, str]):
         self.data = data
 
     def list_configuration_settings(self, **kwargs) -> Iterable[ConfigurationSetting]:
-
         def ct(val: str) -> str | None:
             return KEYVAULT_REF_TYPE if ".vault.azure.net/secrets/" in val else None
 
@@ -106,7 +105,6 @@ class AzureAppConfigurationClientMock:
 
 
 class SecretClientMock:
-
     def __init__(self, data: dict[str, str], raises: str | None):
         self._data = data
         self._raises = raises
