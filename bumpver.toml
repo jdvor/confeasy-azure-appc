@@ -14,6 +14,6 @@ push = true
 "pyproject.toml" = [
   '^version = "{pep440_version}"$',
 ]
-"confeasy.azure_appc/__init__.py" = [
+"confeasy/azure_appc.py" = [
   '^__version__ = "{pep440_version}"$',
 ]

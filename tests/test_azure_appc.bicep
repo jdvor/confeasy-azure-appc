@@ -26,7 +26,7 @@ resource kv1 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   parent: keyVault
   name: 'admin-pswd-dev'
   properties: {
-    value: 'MySecretValue'
+    value: 'admin-pswd-dev-value'
     contentType: 'text/plain'
   }
 }
