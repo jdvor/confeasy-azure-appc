@@ -34,10 +34,8 @@ class AzureAppConfig:
 
     @classmethod
     def from_base_url_in_envars(
-        cls,
-        name: str = "AZURE_APPC_BASE_URL",
-        prefix: str | None = None,
-        label: str | None = None) -> AzureAppConfig:
+        cls, name: str = "AZURE_APPC_BASE_URL", prefix: str | None = None, label: str | None = None
+    ) -> AzureAppConfig:
         """
         Create AzureAppConfig from a base URL of the AppConfiguration resource
         that is expected at given environment variable.
@@ -52,10 +50,8 @@ class AzureAppConfig:
 
     @classmethod
     def from_conn_str_in_envars(
-        cls,
-        name: str = "AZURE_APPC_CONNECTION_STRING",
-        prefix: str | None = None,
-        label: str | None = None) -> AzureAppConfig:
+        cls, name: str = "AZURE_APPC_CONNECTION_STRING", prefix: str | None = None, label: str | None = None
+    ) -> AzureAppConfig:
         """
         Create AzureAppConfig from a connection string for AppConfiguration resource
         that is expected at given environment variable.
