@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "confeasy.azure_appc"
+name = "confeasy-azure-appc"
 version = "1.0.0"
 description = "Azure AppConfiguration extension for confeasy."
 authors = ["jan Dvorak <jandvorak.public@gmail.com>"]

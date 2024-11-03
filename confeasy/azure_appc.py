@@ -33,8 +33,37 @@ class AzureAppConfig:
         self._skip_on_error: bool = True
 
     @classmethod
-    def from_conn_str_in_envars(cls, name: str, prefix: str | None = None, label: str | None = None) -> AzureAppConfig:
-        """Create AzureAppConfig from a connection string that is expected at given environment variable."""
+    def from_base_url_in_envars(
+        cls,
+        name: str = "AZURE_APPC_BASE_URL",
+        prefix: str | None = None,
+        label: str | None = None) -> AzureAppConfig:
+        """
+        Create AzureAppConfig from a base URL of the AppConfiguration resource
+        that is expected at given environment variable.
+        DefaultAzureCredential is used as credentials provider for authentication.
+        """
+        base_url = os.environ.get(name)
+        if not base_url:
+            raise ValueError(f"environment variable {name} is not set")
+        # noinspection PyTypeChecker
+        client = AzureAppConfigurationClient(base_url=base_url, credential=DefaultAzureCredential())
+        return cls(client, prefix, label)
+
+    @classmethod
+    def from_conn_str_in_envars(
+        cls,
+        name: str = "AZURE_APPC_CONNECTION_STRING",
+        prefix: str | None = None,
+        label: str | None = None) -> AzureAppConfig:
+        """
+        Create AzureAppConfig from a connection string for AppConfiguration resource
+        that is expected at given environment variable.
+        Use this if your AppConfiguration is not referencing secrets from a KeyVault,
+        because for the KeyVault you need to create application managed identity anyway
+        (it's SDK does not support connection strings), so you would be mixing two approaches to authentication,
+        which would be confusing.
+        """
         conn_str = os.environ.get(name)
         if not conn_str:
             raise ValueError(f"environment variable {name} is not set")

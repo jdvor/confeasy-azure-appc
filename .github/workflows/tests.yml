@@ -67,7 +67,10 @@ jobs:
 
       - name: Run all tests
         env:
-          APPC_CONNECTION_STRING: ${{ secrets.APPC_CONNECTION_STRING }}
+          AZURE_APPC_BASE_URL: ${{ secrets.AZURE_APPC_BASE_URL }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
         run: poetry run poe citest
 
       - name: Show test report

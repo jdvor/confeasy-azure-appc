@@ -83,7 +83,7 @@ def test_errors_are_swallowed_by_default():
 
 @pytest.mark.integration
 def test_appc_real():
-    sut = AzureAppConfig.from_conn_str_in_envars("APPC_CONNECTION_STRING")
+    sut = AzureAppConfig.from_base_url_in_envars()
     sut.allow_reading_keyvault_references(skip_on_error=False)
     actual = sut.get_configuration_data()
     assert len(actual) >= 6
