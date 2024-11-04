@@ -5,13 +5,17 @@ description = "Azure AppConfiguration extension for confeasy."
 authors = ["jan Dvorak <jandvorak.public@gmail.com>"]
 readme = "README.md"
 keywords = ["configuration", "azure", "AppConfiguration"]
+repository = "https://github.com/jdvor/confeasy-azure-appc"
 license = "MIT"
 packages = [
   { include = "confeasy" },
 ]
 
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/jdvor/confeasy-azure-appc/issues"
+
 [tool.poetry.dependencies]
-python = "^3.13"
+python = "^3.12"
 azure-appconfiguration = "^1.7.1"
 azure-identity = "^1.19.0"
 azure-keyvault-secrets = "^4.9.0"
@@ -32,7 +36,7 @@ types-requests = "^2.32.0.20241016"
 
 [tool.mypy]
 exclude = '^tests/'
-python_version = "3.13"
+python_version = "3.12"
 cache_dir = ".cache/mypy/"
 check_untyped_defs = true
 disallow_incomplete_defs = true
@@ -90,10 +94,13 @@ exclude_lines = [
 cache-dir = ".cache/ruff"
 line-length = 120
 output-format = "grouped"
-target-version = "py313"
+target-version = "py312"
 
 [tool.ruff.lint]
-ignore = ["E501"]
+ignore = [
+  "E501",    # line-too-long
+  "PTH123",  # open() should be replaced by Path.open()
+]
 select = [
   "A",    # flake8-builtins
   "ARG",  # flake8-unused-arguments

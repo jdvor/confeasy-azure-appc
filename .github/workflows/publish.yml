@@ -9,7 +9,7 @@ on:
         required: true
 
 env:
-  PYTHON_VERSION: '3.13'
+  PYTHON_VERSION: '3.12'
   POETRY_VERSION: '1.8.4'
 
 jobs:
